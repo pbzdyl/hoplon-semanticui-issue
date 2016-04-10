@@ -1,0 +1,21 @@
+(page "index.html"
+      (:require [cljsjs.semantic-ui]))
+
+(defelem picker []
+  (let [dropdown    (select :class "ui fluent search dropdown")
+        response    {:success true
+                     :results [{:name "Option 1" :value "opt1"}
+                               {:name "Option 2" :value "opt2"}]}
+        response-fn (fn [settings callback]
+                      (with-timeout 500
+                        (callback (clj->js response))))]
+    (with-init!
+      (doto (js/jQuery dropdown)
+        (.dropdown (clj->js {:apiSettings {:responseAsync response-fn}}))))
+    dropdown))
+
+(html
+ (head
+  (link :href "//oss.maxcdn.com/semantic-ui/2.1.8/semantic.min.css" :rel "stylesheet" :type "text/css" :class "ui"))
+ (body
+  (picker)))
